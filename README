@@ -1,13 +1,46 @@
 TestBenchmark
 ======
 
-More info forthcoming.
+Library for recording and outputting benchmarks for your Test::Unit tests.
 
 
 Example
 =======
 
-Example goes here.
+Note: as-is, this library hasn't been extracted with the necessary calls to
+actually record the benchmarks for tests. Because of the vagaries of 
+Test::Unit's design and lack of callback hooks around tests, the means to 
+actually record the benchmarks are quite a hairy piece of hackery into 
+Test::Unit that was determined to be unfit for publication. The ultimate goal 
+would be to mimick/fork/modify the solution presented by the other test_benchmark
+plugin (http://github.com/timocratic/test_benchmark); that is, utilizing a 
+mediator from the Test::Unit guts. So, for the time being, this example code is
+meant purely to show what is involved in recording and displaying test 
+benchmarks, not necessarily how to get Test::Unit (or shoulda) to mark the 
+benchmarks.
 
+Before a single test runs (ideally before the setup runs):
+
+@test_benchmark = TestBenchmark.new
+@test_benchmark.register_start(self)
+
+where self is right now a Test::Unit::TestCase, or an equivalent object that 
+quacks "method_name" so the register can be built properly.
+
+Then, after a single test finishes:
+
+  @test_benchmark.register_end(self)
+
+At the end of a test suite run:
+
+  TestBenchmarkHtmlFormatter.dump(@test_benchmark)
+
+This will dump an HTML representation of the benchmark data into either
+the tmp/test_benchmarks directory, or the ENV['CC_BUILD_ARTIFACTS'] directory
+if that key exists in ENV (for use with Cruisecontrol.rb/metric_fu).
+
+Speaking of metric_fu, the CSS style for those HTML files was robbed from
+an earlier version of metric_fu (whose template styles promptly changed, 
+rendering the robbery moot).
 
 Copyright (c) 2010 Clint Bishop, released under the MIT license
