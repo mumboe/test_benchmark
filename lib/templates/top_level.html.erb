@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <style type="text/css">
+      body { 
+      	background-color: rgb(240, 240, 245);
+      	font-family: verdana, arial, helvetica;
+      }
+
+      table {
+      	border-collapse: collapse;
+      }
+
+      table.report {
+      	width: 100%;
+      }
+
+      table th {
+      	text-align: center;
+      }
+
+      table td.score {
+      	text-align: right;
+      }
+      
+      table td.count {
+        text-align: center;
+      }
+
+      table th {
+      	background: #dcecff;
+      	border: #d0d0d0 1px solid;
+      	font-weight: bold;
+      }
+
+      table td {
+      	border: #d0d0d0 1px solid;
+      }
+
+      table tr.light {
+       background-color: rgb(240, 240, 245);
+      }
+
+      table tr.dark {
+       background-color: rgb(230, 230, 235);
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1>Test started at <%= test_benchmark.start_time.strftime("%Y/%m/%d %H:%M:%S") %> and took <%= test_benchmark.total_duration %> seconds</h1>
+    <h2>Total average test duration: <%= test_benchmark.total_average_duration %> seconds</h2>
+    <h2><a href="all.html">All test results</a></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            Test Class
+          </th>
+          <th>
+            Duration
+          </th>
+          <th>
+            Test Count
+          </th>
+          <th>
+            Avg Duration Per Method
+          </th>
+          <th>
+            Max Duration
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sorted_register.each do |test_class, test_methods| %>
+          <tr>
+            <td>
+              <a href="<%= test_class %>.html"><%= test_class %></a>
+            </td>
+            <td class="count">
+              <%= test_benchmark.duration test_class %>
+            </td>
+            <td class="score">
+              <%= test_methods.to_a.size %>
+            </td>
+            <td class="score">
+              <%= test_benchmark.average_duration test_class %>
+            </td>
+            <td class="score">
+              <%= test_benchmark.max_duration test_class %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </body>
+</html>
